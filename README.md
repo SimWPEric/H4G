@@ -6,8 +6,8 @@ This is a  Telegram bot built using Python's telegram.ext library. The bot is de
 3. Enable volunteers to request for certification for their service.
 
 ## Requirements
-Python 3.x
-python-telegram-bot library
+Python v3.x
+python-telegram-bot library v13.13
 
 ## Installation
 
