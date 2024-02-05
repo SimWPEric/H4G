@@ -18,5 +18,5 @@ Before running the bot, you need to have Python installed on your system. If you
 This bot requires the python-telegram-bot library. You can install it using pip:
 
 ```bash
-pip install python-telegram-bot==13.13
+pip install python-telegram-bot==20.7
 ```
