@@ -1,6 +1,3 @@
-from telegram import Update
-from telegram.ext import ContextTypes
-
 import os 
 from config import DB_ID
 
@@ -61,21 +58,10 @@ def view_activities():
         result = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range="Events!A2:C3").execute()
 
         values = result.get("values", [])
-        return values
+        for row in values:
+            print(row)
     except HttpError as error:
         print(error)
 
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    activities = view_activities()
-    
-    # Initialize the message with a header
-    message = "<b>Activities:</b>\n\n"
-    
-    # Iterate over each activity and format it
-    for activity in activities:
-        activity_text = f"<b>{activity[0]}</b>\n<b>ID:</b> {activity[1]}\n{activity[2]}\n\n"
-        message += activity_text
-    
-    # Send the formatted message
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML')
+if __name__ == "__main__": 
+    view_activities()

@@ -20,3 +20,8 @@ This bot requires the python-telegram-bot library. You can install it using pip:
 ```bash
 pip install python-telegram-bot==20.7
 ```
+
+### For database 
+```pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib```
+
+/Users/simweipengeric/opt/anaconda3/lib/python3.9/site-packages
