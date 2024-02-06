@@ -69,13 +69,10 @@ def view_activities():
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     activities = view_activities()
     
-    # Initialize the message with a header
     message = "<b>Activities:</b>\n\n"
     
-    # Iterate over each activity and format it
     for activity in activities:
         activity_text = f"<b>{activity[0]}</b>\n<b>ID:</b> {activity[1]}\n{activity[2]}\n\n"
         message += activity_text
     
-    # Send the formatted message
     await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML')

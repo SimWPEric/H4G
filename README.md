@@ -24,4 +24,11 @@ pip install python-telegram-bot==20.7
 ### For database 
 ```pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib```
 
-/Users/simweipengeric/opt/anaconda3/lib/python3.9/site-packages
+### Set up config.py 
+telegram_token = "" 
+DB_ID = ""
+
+Create `credentials.json` with correct credentials
+
+
+
