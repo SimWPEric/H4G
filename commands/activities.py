@@ -1,5 +1,6 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
+
 
 import os 
 from config import DB_ID
@@ -90,5 +91,10 @@ async def activities(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for activity in activities:
         activity_text = f"<b>{activity[0]}</b>\n<b>ID:</b> {activity[1]}\n<b>Description:</b>{activity[2]}\n<b>Link:</b>{activity[3]}\n\n"
         message += activity_text
+
+    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                 InlineKeyboardButton("Option 2", callback_data='2')]]
     
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML')
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML', reply_markup=reply_markup)
