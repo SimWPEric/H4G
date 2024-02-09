@@ -2,7 +2,7 @@ import logging
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler
 from config import telegram_token
-from commands import register, start, activities, join, view
+from commands import register, start, activities, join, view, certificate
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,4 +24,6 @@ if __name__ == '__main__':
 
     application.add_handler(view.view_activities_handler)
     
+    application.add_handler(certificate.certificate_conv_handler)
+
     application.run_polling()
