@@ -1,6 +1,5 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update
 from telegram.ext import ContextTypes, CommandHandler
-
 
 import os 
 from config import DB_ID
@@ -65,10 +64,10 @@ def view_activities():
                 sheets.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
 
                 # Populate the newly created sheet with headers
-                header_values = [['User ID', 'Name', 'Email', 'Phone Number', 'Age', 'Attendance']]
+                header_values = [['User ID', 'Name', 'Email', 'Phone Number', 'Age']]
                 sheets.values().update(
                     spreadsheetId=SPREADSHEET_ID,
-                    range=f"{activity_id}!A1:F1",
+                    range=f"{activity_id}!A1:E1",
                     valueInputOption='RAW',
                     body={'values': header_values}
                 ).execute()
@@ -80,6 +79,9 @@ def view_activities():
     except HttpError as error:
         print(error)
 
+
+
+
 async def activities(update: Update, context: ContextTypes.DEFAULT_TYPE):
     activities = view_activities()
     
@@ -88,12 +90,7 @@ async def activities(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for activity in activities:
         activity_text = f"<b>{activity[0]}</b>\n<b>ID:</b> {activity[1]}\n<b>Description:</b>{activity[2]}\n<b>Link:</b>{activity[3]}\n\n"
         message += activity_text
-
-    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-                 InlineKeyboardButton("Option 2", callback_data='2')]]
     
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML', reply_markup=reply_markup)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML')
 
 activities_handler = CommandHandler('activities', activities)

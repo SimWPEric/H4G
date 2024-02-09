@@ -118,13 +118,12 @@ def activity_exists(activity_id):
     try:
         result = sheet.values().get(
             spreadsheetId=SPREADSHEET_ID,
-            range=f"{activity_id}!A1:F1"  # Assuming data range is from column A to F, adjust as needed
+            range=f"{activity_id}!A1:F1"  
         ).execute()
         return bool(result.get("values", []))
     except:
         return False
 
-# Define conversation handler with two states
 certificate_conv_handler = ConversationHandler(
     entry_points=[CommandHandler('certificate', start_certificate)],
     states={

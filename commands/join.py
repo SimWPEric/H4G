@@ -78,7 +78,7 @@ async def get_activity_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Check if user is enrolled and approval status is true
     if not check_user_enrolled(update.effective_user.id):
-        await update.message.reply_text("You need to enroll first before joining an activity. Do /enroll to check your enrollment status.")
+        await update.message.reply_text("You need to register first before joining an activity. Do /register to check your registration status.")
         return ConversationHandler.END
 
     # Check if activity ID exists
