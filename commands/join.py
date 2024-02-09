@@ -126,6 +126,8 @@ def add_user_to_activity_sheet(user_id, activity_id):
     sheet = service.spreadsheets()
 
     user_details = get_user_details(user_id)
+    # Default False for attendance
+    user_details.append(False)
     if user_details:
         values = [user_details]
         body = {'values': values}

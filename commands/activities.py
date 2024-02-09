@@ -65,10 +65,10 @@ def view_activities():
                 sheets.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
 
                 # Populate the newly created sheet with headers
-                header_values = [['User ID', 'Name', 'Email', 'Phone Number', 'Age']]
+                header_values = [['User ID', 'Name', 'Email', 'Phone Number', 'Age', 'Attendance']]
                 sheets.values().update(
                     spreadsheetId=SPREADSHEET_ID,
-                    range=f"{activity_id}!A1:E1",
+                    range=f"{activity_id}!A1:F1",
                     valueInputOption='RAW',
                     body={'values': header_values}
                 ).execute()
