@@ -65,7 +65,7 @@ async def get_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return AGE
     context.user_data['age'] = age
     enrollment_details = (
-        f"Enrollment completed!\n"
+        f"Enrollment completed! Please wait for your enrollment to be approved. \n"
         f"Name: {context.user_data['name']}\n"
         f"Email: {context.user_data['email']}\n"
         f"Phone: {context.user_data['phone']}\n"
@@ -148,7 +148,7 @@ def write_to_spreadsheet(data):
     sheet = service.spreadsheets()
 
     values = [
-        [data['user_id'], data['name'], data['email'], data['phone'], data['age'], False]  # Default False for Approval Status
+        [data['user_id'], data['name'], data['email'], data['phone'], data['age'], False]  # default False for Approval Status
     ]
     body = {
         'values': values
@@ -161,6 +161,7 @@ def write_to_spreadsheet(data):
         body=body
     ).execute()
     print(f"{result.get('updates').get('updatedCells')} cells appended.")
+
 
 enroll_conversation_handler = ConversationHandler(
     entry_points=[CommandHandler('enroll', start_enrollment)],

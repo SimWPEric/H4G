@@ -14,30 +14,72 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 SPREADSHEET_ID = DB_ID
 
-def view_activities(): 
-    credentials = None 
+def view_activities():
+    credentials = None
     if os.path.exists("token.json"):
         credentials = Credentials.from_authorized_user_file("token.json", SCOPES)
-    if not credentials or not credentials.valid: 
+    if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
             credentials.refresh(Request())
-        else: 
+        else:
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             credentials = flow.run_local_server(port=0)
-        with open("token.json", "w") as token: 
+        with open("token.json", "w") as token:
             token.write(credentials.to_json())
 
-
-    try: 
+    try:
         service = build("sheets", "v4", credentials=credentials)
-        sheets = service.spreadsheets() 
+        sheets = service.spreadsheets()
 
-        result = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range="Events!A2:D3").execute()
+        # Check if the sheet named after activity ID exists, if not, create it
+        activity_ids = set()
+        result = sheets.get(spreadsheetId=SPREADSHEET_ID).execute()
+        for sheet in result['sheets']:
+            activity_ids.add(sheet['properties']['title'])
 
+        # Fetch data from existing sheet 'Events'
+        result = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range="Events!A:D").execute()
+
+        # Extract values
         values = result.get("values", [])
+        values = values[1::]
+
+        # Create sheets for activities if they don't exist
+        for activity in values:
+            activity_id = activity[1]
+            if activity_id not in activity_ids:
+                body = {
+                    'requests': [
+                        {
+                            'addSheet': {
+                                'properties': {
+                                    'title': activity_id
+                                }
+                            }
+                        }
+                    ]
+                }
+
+                # Execute the request to create a new sheet
+                sheets.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
+
+                # Populate the newly created sheet with headers
+                header_values = [['User ID', 'Name', 'Email', 'Phone Number', 'Age']]
+                sheets.values().update(
+                    spreadsheetId=SPREADSHEET_ID,
+                    range=f"{activity_id}!A1:E1",
+                    valueInputOption='RAW',
+                    body={'values': header_values}
+                ).execute()
+
+                activity_ids.add(activity_id)
+
         return values
+
     except HttpError as error:
         print(error)
+
+
 
 
 async def activities(update: Update, context: ContextTypes.DEFAULT_TYPE):
