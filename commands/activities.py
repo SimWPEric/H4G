@@ -1,5 +1,5 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, CommandHandler
 
 
 import os 
@@ -80,9 +80,6 @@ def view_activities():
     except HttpError as error:
         print(error)
 
-
-
-
 async def activities(update: Update, context: ContextTypes.DEFAULT_TYPE):
     activities = view_activities()
     
@@ -98,3 +95,5 @@ async def activities(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await context.bot.send_message(chat_id=update.effective_chat.id, text=message, parse_mode='HTML', reply_markup=reply_markup)
+
+activities_handler = CommandHandler('activities', activities)
