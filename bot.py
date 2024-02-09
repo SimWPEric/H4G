@@ -2,7 +2,7 @@ import logging
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler
 from config import telegram_token
-from commands import start, enroll, activities, join, view
+from commands import register, start, activities, join, view
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     start_handler = CommandHandler('start', start.start)
     application.add_handler(start_handler)
 
-    application.add_handler(enroll.enroll_conversation_handler)
+    application.add_handler(register.register_conversation_handler)
 
     activities_handler = CommandHandler('activities', activities.activities)
     application.add_handler(activities_handler)

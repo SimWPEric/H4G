@@ -14,21 +14,21 @@ SPREADSHEET_ID = DB_ID
 
 NAME, EMAIL, PHONE, AGE = range(4)
 
-async def start_enrollment(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start_registration(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     
     # Check if user_id already exists in Google Sheets
     if check_user_id_exists(user_id):
-        # Check if user's enrollment is approved
+        # Check if user's registration is approved
         if not check_approval_status(user_id):
             await update.message.reply_text("Your application is being processed.")
             return ConversationHandler.END
         else:
-            await update.message.reply_text("You have already enrolled.")
+            await update.message.reply_text("You have already registered.")
             return ConversationHandler.END
     
     context.user_data['user_id'] = user_id
-    await update.message.reply_text("Welcome to the enrollment process! Please provide your name.")
+    await update.message.reply_text("Welcome to the registration process! Please provide your name.")
     return NAME
 
 async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -64,14 +64,14 @@ async def get_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Please provide a valid age.")
         return AGE
     context.user_data['age'] = age
-    enrollment_details = (
-        f"Enrollment completed! Please wait for your enrollment to be approved. \n"
+    registration_details = (
+        f"Registration completed! Please wait for your registration to be approved. \n"
         f"Name: {context.user_data['name']}\n"
         f"Email: {context.user_data['email']}\n"
         f"Phone: {context.user_data['phone']}\n"
         f"Age: {age}"
     )
-    await update.message.reply_text(enrollment_details)
+    await update.message.reply_text(registration_details)
 
     # Write data to Google Sheets
     write_to_spreadsheet(context.user_data)
@@ -80,8 +80,8 @@ async def get_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return ConversationHandler.END
 
-async def cancel_enrollment(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Enrollment process canceled.")
+async def cancel_registration(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Registration process canceled.")
     context.user_data.clear()
 
     return ConversationHandler.END
@@ -163,14 +163,14 @@ def write_to_spreadsheet(data):
     print(f"{result.get('updates').get('updatedCells')} cells appended.")
 
 
-enroll_conversation_handler = ConversationHandler(
-    entry_points=[CommandHandler('enroll', start_enrollment)],
+register_conversation_handler = ConversationHandler(
+    entry_points=[CommandHandler('register', start_registration)],
     states={
         NAME: [MessageHandler(filters.TEXT, get_name)],
         EMAIL: [MessageHandler(filters.TEXT, get_email)],
         PHONE: [MessageHandler(filters.TEXT, get_phone)],
         AGE: [MessageHandler(filters.TEXT, get_age)],
     },
-    fallbacks=[CommandHandler('cancel', cancel_enrollment)],
+    fallbacks=[CommandHandler('cancel', cancel_registration)],
     allow_reentry=True
 )
